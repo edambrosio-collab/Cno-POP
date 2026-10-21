@@ -109,8 +109,6 @@ Apri Google Maps
 
 <script>
 
-let database = {};
-
 async function caricaFile(nomeFile,tipo){
 
     const response = await fetch(nomeFile);
@@ -126,18 +124,18 @@ async function caricaFile(nomeFile,tipo){
 
         const parti = riga.split(/\s+/);
 
-const parti = riga.split(/\s+/);
+        if(parti.length < 2) continue;
 
-if(parti.length < 2) continue;
+        const codice = parti[0].trim().toUpperCase();
 
-const codice = parti[0].trim().toUpperCase();
+        const coord = parti[1].trim();
 
-const coord = parti[1].trim();
-
-database[codice] = {
-    tipo: tipo,
-    coord: coord
-};
+        database[codice] = {
+            tipo: tipo,
+            coord: coord
+        };
+    }
+}
 
  
 
@@ -183,9 +181,9 @@ document.getElementById("search")
     document.getElementById("coord")
     .innerText = "Coordinate: " + dato.coord;
 
-document.getElementById("maps").href =
-"https://www.google.com/maps?q=" +
-encodeURIComponent(dato.coord);
+    document.getElementById("maps").href =
+    "https://www.google.com/maps?q=" +
+    encodeURIComponent(dato.coord);
 
     document.getElementById("result")
     .style.display="block";
