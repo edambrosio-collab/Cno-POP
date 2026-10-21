@@ -126,19 +126,20 @@ async function caricaFile(nomeFile,tipo){
 
         const parti = riga.split(/\s+/);
 
-        if(parti.length < 3) continue;
+const parti = riga.split(/\s+/);
 
-        const codice = parti[0].trim().toUpperCase();
+if(parti.length < 2) continue;
 
-   let lat = parti[1].trim().replace(/\.$/, '');
-let lon = parti[2].trim().replace(/\.$/, '');
+const codice = parti[0].trim().toUpperCase();
 
-        database[codice] = {
-            tipo: tipo,
-            coord: `${lat},${lon}`
-        };
-    }
-}
+const coord = parti[1].trim();
+
+database[codice] = {
+    tipo: tipo,
+    coord: coord
+};
+
+ 
 
 async function inizializza(){
 
@@ -182,9 +183,9 @@ document.getElementById("search")
     document.getElementById("coord")
     .innerText = "Coordinate: " + dato.coord;
 
-    document.getElementById("maps").href =
-    "https://www.google.com/maps?q=" +
-    encodeURIComponent(dato.coord);
+document.getElementById("maps").href =
+"https://www.google.com/maps?q=" +
+encodeURIComponent(dato.coord);
 
     document.getElementById("result")
     .style.display="block";
