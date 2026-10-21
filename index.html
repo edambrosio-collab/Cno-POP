@@ -3,107 +3,75 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ricerca CNO POP</title>
+<title>Ricerca CNO / POP</title>
 
 <style>
+
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+}
+
 body{
 font-family:Arial,sans-serif;
-background:#f4f4f4;
-margin:0;
+background:#f4f6f9;
 padding:20px;
 }
 
 .container{
-max-width:500px;
+max-width:600px;
 margin:auto;
 background:white;
 padding:20px;
-border-radius:12px;
-box-shadow:0 0 10px rgba(0,0,0,0.1);
+border-radius:15px;
+box-shadow:0 2px 15px rgba(0,0,0,.12);
 }
 
 h1{
 text-align:center;
-color:#0066cc;
+color:#0078d4;
+margin-bottom:20px;
 }
 
 input{
 width:100%;
-padding:12px;
+padding:15px;
 font-size:18px;
-margin-bottom:10px;
-box-sizing:border-box;
-}
-
-button{
-width:100%;
-padding:14px;
-font-size:18px;
-background:#0066cc;
-color:white;
-border:none;
-border-radius:8px;
-cursor:pointer;
+border:1px solid #ccc;
+border-radius:10px;
 }
 
 .result{
 margin-top:20px;
+display:none;
 padding:15px;
 background:#f8f8f8;
-border-radius:8px;
-display:none;
+border-radius:10px;
 }
-</style>
 
-</head>
-
-<body>
-
-<div class="container">
-
-<h1>Ricerca CNO / POP</h1>
-
-<input id="codice" placeholder="Inserisci codice (es. MIEXA o D247_CNO3)">
-
-<button onclick="ricerca()">
-Cerca
-</button>
-
-<div class="result" id="risultato">
-<h3 id="nome"></h3>
-<p id="coord"></p>
-<a id="maps" target="_blank">📍 Apri Google Maps</a>
-</div>
-
-</div>
-
-<script>
-
-const database = {
-"MIEXA":"45.49371785,8.95740184",
-"D247_CNO3":"46.56677482,12.52346662"
-};
-
-function ricerca(){
-
-let codice=document.getElementById("codice").value.trim().toUpperCase();
-
-if(database[codice]){
-
-document.getElementById("nome").innerText=codice;
-document.getElementById("coord").innerText=database[codice];
-
-document.getElementById("maps").href=
-"https://www.google.com/maps?q="+database[codice];
-
-document.getElementById("risultato").style.display="block";
-
+.result h2{
+margin-bottom:10px;
+color:#0078d4;
 }
-else{
-alert("Codice non trovato");
-}
-}
-</script>
 
-</body>
-</html>
+.info{
+margin:8px 0;
+word-break:break-word;
+}
+
+.btn{
+display:block;
+width:100%;
+margin-top:15px;
+padding:15px;
+background:#0078d4;
+color:white;
+text-align:center;
+text-decoration:none;
+font-weight:bold;
+border-radius:10px;
+}
+
+.notfound{
+margin-top:
