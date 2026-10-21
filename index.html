@@ -107,42 +107,50 @@ Apri Google Maps
 
 </div>
 
-
-</body>
-</html>
-
 <script>
 
 let database = {};
 
-async function caricaFile(nomeFile, tipo) {
+async function caricaFile(nomeFile, tipo){
 
     const response = await fetch(nomeFile);
     const testo = await response.text();
 
-const primoSpazio = riga.indexOf(" ");
+    const righe = testo.split(/\r?\n/);
 
-if (primoSpazio === -1) continue;
+    for(let i = 1; i < righe.length; i++){
 
-const codice = riga.substring(0, primoSpazio).trim().toUpperCase();
+        const riga = righe[i].trim();
 
-let coord = riga.substring(primoSpazio + 1).trim();
+        if(!riga) continue;
 
-// Corregge coordinate tipo:
-// 45.49371785.,8.95740184
-coord = coord.replace(/\.,/g, ",");
+        const primoSpazio = riga.indexOf(" ");
 
-database[codice] = {
-    tipo: tipo,
-    coord: coord
-};
-     
+        if(primoSpazio === -1) continue;
 
-async function inizializza() {
+        const codice = riga
+            .substring(0, primoSpazio)
+            .trim()
+            .toUpperCase();
+
+        let coord = riga
+            .substring(primoSpazio + 1)
+            .trim();
+
+        coord = coord.replace(/\.,/g, ",");
+
+        database[codice] = {
+            tipo: tipo,
+            coord: coord
+        };
+    }
+}
+
+async function inizializza(){
 
     await Promise.all([
-        caricaFile("CoordinatePOP.CSV", "POP"),
-        caricaFile("CoordinateCNO.CSV", "CNO")
+        caricaFile("CoordinatePOP.CSV","POP"),
+        caricaFile("CoordinateCNO.CSV","CNO")
     ]);
 
     console.log("Record caricati:", Object.keys(database).length);
@@ -151,13 +159,13 @@ async function inizializza() {
 inizializza();
 
 document.getElementById("search")
-.addEventListener("input", function () {
+.addEventListener("input", function(){
 
     const codice = this.value.trim().toUpperCase();
 
     const dato = database[codice];
 
-    if (!dato) {
+    if(!dato){
 
         document.getElementById("result").style.display = "none";
 
@@ -180,8 +188,10 @@ document.getElementById("search")
         encodeURIComponent(dato.coord);
 
     document.getElementById("result").style.display = "block";
-
     document.getElementById("notfound").style.display = "none";
 });
 
 </script>
+
+</body>
+</html>
