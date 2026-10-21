@@ -130,8 +130,8 @@ async function caricaFile(nomeFile,tipo){
 
         const codice = parti[0].trim().toUpperCase();
 
-        let lat = parti[1].replace(",", "").trim();
-        let lon = parti[2].replace(",", "").trim();
+   let lat = parti[1].trim().replace(/\.$/, '');
+let lon = parti[2].trim().replace(/\.$/, '');
 
         database[codice] = {
             tipo: tipo,
