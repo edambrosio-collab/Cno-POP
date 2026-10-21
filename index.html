@@ -107,28 +107,38 @@ Apri Google Maps
 
 </div>
 
+
+</body>
+</html>
+
 <script>
 
-async function caricaFile(nomeFile,tipo){
+let database = {};
+
+async function caricaFile(nomeFile, tipo) {
 
     const response = await fetch(nomeFile);
     const testo = await response.text();
 
     const righe = testo.split(/\r?\n/);
 
-    for(let i=1;i<righe.length;i++){
+    for (let i = 1; i < righe.length; i++) {
 
         const riga = righe[i].trim();
 
-        if(!riga) continue;
+        if (!riga) continue;
 
         const parti = riga.split(/\s+/);
 
-        if(parti.length < 2) continue;
+        if (parti.length < 2) continue;
 
         const codice = parti[0].trim().toUpperCase();
 
-        const coord = parti[1].trim();
+        let coord = parti[1].trim();
+
+        // Corregge coordinate tipo:
+        // 45.49371785.,8.95740184
+        coord = coord.replace(/\.,/g, ",");
 
         database[codice] = {
             tipo: tipo,
@@ -137,63 +147,50 @@ async function caricaFile(nomeFile,tipo){
     }
 }
 
- 
-
-async function inizializza(){
+async function inizializza() {
 
     await Promise.all([
-        caricaFile("CoordinatePOP.CSV","POP"),
-        caricaFile("CoordinateCNO.CSV","CNO")
+        caricaFile("CoordinatePOP.CSV", "POP"),
+        caricaFile("CoordinateCNO.CSV", "CNO")
     ]);
 
-    console.log("Record caricati:",
-    Object.keys(database).length);
+    console.log("Record caricati:", Object.keys(database).length);
 }
 
 inizializza();
 
 document.getElementById("search")
-.addEventListener("input",function(){
+.addEventListener("input", function () {
 
-    const codice =
-    this.value.trim().toUpperCase();
+    const codice = this.value.trim().toUpperCase();
 
     const dato = database[codice];
 
-    if(!dato){
+    if (!dato) {
 
-        document.getElementById("result")
-        .style.display="none";
+        document.getElementById("result").style.display = "none";
 
-        document.getElementById("notfound")
-        .style.display =
-        codice.length > 1 ? "block" : "none";
+        document.getElementById("notfound").style.display =
+            codice.length > 1 ? "block" : "none";
 
         return;
     }
 
-    document.getElementById("nome")
-    .innerText = codice;
+    document.getElementById("nome").innerText = codice;
 
-    document.getElementById("tipo")
-    .innerText = "Tipo: " + dato.tipo;
+    document.getElementById("tipo").innerText =
+        "Tipo: " + dato.tipo;
 
-    document.getElementById("coord")
-    .innerText = "Coordinate: " + dato.coord;
+    document.getElementById("coord").innerText =
+        "Coordinate: " + dato.coord;
 
     document.getElementById("maps").href =
-    "https://www.google.com/maps?q=" +
-    encodeURIComponent(dato.coord);
+        "https://www.google.com/maps?q=" +
+        encodeURIComponent(dato.coord);
 
-    document.getElementById("result")
-    .style.display="block";
+    document.getElementById("result").style.display = "block";
 
-    document.getElementById("notfound")
-    .style.display="none";
-
+    document.getElementById("notfound").style.display = "none";
 });
 
 </script>
-
-</body>
-</html>
