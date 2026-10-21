@@ -1,115 +1,3 @@
-<!DOCTYPE html>
-<html lang="it">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ricerca CNO / POP</title>
-
-<style>
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-}
-
-body{
-    font-family:Arial,sans-serif;
-    background:#f4f6f9;
-    padding:20px;
-}
-
-.container{
-    max-width:600px;
-    margin:auto;
-    background:white;
-    padding:20px;
-    border-radius:15px;
-    box-shadow:0 2px 15px rgba(0,0,0,.12);
-}
-
-h1{
-    text-align:center;
-    color:#0078d4;
-    margin-bottom:20px;
-}
-
-input{
-    width:100%;
-    padding:15px;
-    font-size:18px;
-    border:1px solid #ccc;
-    border-radius:10px;
-}
-
-.result{
-    margin-top:20px;
-    display:none;
-    padding:15px;
-    background:#f8f8f8;
-    border-radius:10px;
-}
-
-.info{
-    margin:10px 0;
-    word-break:break-word;
-}
-
-.btn{
-    display:block;
-    width:100%;
-    margin-top:15px;
-    padding:15px;
-    background:#0078d4;
-    color:white;
-    text-align:center;
-    text-decoration:none;
-    border-radius:10px;
-    font-weight:bold;
-}
-
-.notfound{
-    margin-top:15px;
-    color:red;
-    display:none;
-    font-weight:bold;
-}
-</style>
-</head>
-<body>
-
-<div class="container">
-
-<h1>📍 Ricerca CNO / POP</h1>
-
-<input
-id="search"
-type="text"
-placeholder="Inserisci codice (es. MIEXA o D247_CNO3)"
-autocomplete="off">
-
-<div class="notfound" id="notfound">
-Codice non trovato
-</div>
-
-<div class="result" id="result">
-
-<h2 id="nome"></h2>
-
-<div class="info" id="tipo"></div>
-
-<div class="info" id="coord"></div>
-
-<a
-id="maps"
-class="btn"
-target="_blank">
-Apri Google Maps
-</a>
-
-</div>
-
-</div>
-
 <script>
 
 let database = {};
@@ -131,10 +19,12 @@ async function caricaFile(nomeFile,tipo){
 
         if(parti.length < 3) continue;
 
-        const codice = parti[0].toUpperCase();
+        const codice = parti[0].trim().toUpperCase();
 
-        const lat = parti[1].replace(",",".");
-        const lon = parti[2].replace(",",".");
+        const lat = parseFloat(parti[1].replace(",","."));
+        const lon = parseFloat(parti[2].replace(",","."));
+
+        if(isNaN(lat) || isNaN(lon)) continue;
 
         database[codice] = {
             tipo: tipo,
@@ -150,14 +40,13 @@ async function inizializza(){
         caricaFile("CoordinateCNO.CSV","CNO")
     ]);
 
-    console.log("Record caricati:",Object.keys(database).length);
+    console.log("Record caricati:", Object.keys(database).length);
 }
 
 inizializza();
 
-document
-.getElementById("search")
-.addEventListener("input",function(){
+document.getElementById("search")
+.addEventListener("input", function(){
 
     const valore = this.value.trim().toUpperCase();
 
@@ -165,8 +54,8 @@ document
     const notfound = document.getElementById("notfound");
 
     if(valore.length < 2){
-        result.style.display="none";
-        notfound.style.display="none";
+        result.style.display = "none";
+        notfound.style.display = "none";
         return;
     }
 
@@ -174,31 +63,23 @@ document
 
         const dato = database[valore];
 
-        document.getElementById("nome").innerText =
-        valore;
-
-        document.getElementById("tipo").innerText =
-        "Tipo: " + dato.tipo;
-
-        document.getElementById("coord").innerText =
-        "Coordinate: " + dato.coord;
+        document.getElementById("nome").innerText = valore;
+        document.getElementById("tipo").innerText = "Tipo: " + dato.tipo;
+        document.getElementById("coord").innerText = "Coordinate: " + dato.coord;
 
         document.getElementById("maps").href =
-        "https://www.google.com/maps?q=" +
-        dato.coord;
+            "https://www.google.com/maps?q=" +
+            encodeURIComponent(dato.coord);
 
-        result.style.display="block";
-        notfound.style.display="none";
-    }
-    else{
+        result.style.display = "block";
+        notfound.style.display = "none";
 
-        result.style.display="none";
-        notfound.style.display="block";
+    } else {
+
+        result.style.display = "none";
+        notfound.style.display = "block";
     }
 
 });
 
 </script>
-
-</body>
-</html>
