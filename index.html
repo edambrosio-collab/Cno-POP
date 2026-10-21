@@ -70,6 +70,7 @@ input{
     color:red;
     margin-top:15px;
     display:none;
+    font-weight:bold;
 }
 </style>
 </head>
@@ -127,17 +128,14 @@ async function caricaFile(nomeFile,tipo){
 
         if(parti.length < 3) continue;
 
-        const codice = parti[0].toUpperCase();
+        const codice = parti[0].trim().toUpperCase();
 
-        let lat = parti[1].replace(",",".");
-        let lon = parti[2].replace(",",".");
-
-        lat = lat.replace(/[^0-9.-]/g,"");
-        lon = lon.replace(/[^0-9.-]/g,"");
+        let lat = parti[1].replace(",", "").trim();
+        let lon = parti[2].replace(",", "").trim();
 
         database[codice] = {
             tipo: tipo,
-            coord: lat + "," + lon
+            coord: `${lat},${lon}`
         };
     }
 }
@@ -145,8 +143,8 @@ async function caricaFile(nomeFile,tipo){
 async function inizializza(){
 
     await Promise.all([
-        caricaFile("CoordinateCNO.CSV","CNO"),
-        caricaFile("CoordinatePOP.CSV","POP")
+        caricaFile("CoordinatePOP.CSV","POP"),
+        caricaFile("CoordinateCNO.CSV","CNO")
     ]);
 
     console.log("Record caricati:",
@@ -155,8 +153,7 @@ async function inizializza(){
 
 inizializza();
 
-document
-.getElementById("search")
+document.getElementById("search")
 .addEventListener("input",function(){
 
     const codice =
