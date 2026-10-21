@@ -128,24 +128,19 @@ async function caricaFile(nomeFile, tipo) {
 
         if (!riga) continue;
 
-        const parti = riga.split(/\s+/);
+const codice = parti[0].trim().toUpperCase();
 
-        if (parti.length < 2) continue;
+let coord = parti.slice(1).join(" ").trim();
 
-        const codice = parti[0].trim().toUpperCase();
+// Corregge coordinate tipo:
+// 45.49371785.,8.95740184
+coord = coord.replace(/\.,/g, ",");
 
-        let coord = parti[1].trim();
-
-        // Corregge coordinate tipo:
-        // 45.49371785.,8.95740184
-        coord = coord.replace(/\.,/g, ",");
-
-        database[codice] = {
-            tipo: tipo,
-            coord: coord
-        };
-    }
-}
+database[codice] = {
+    tipo: tipo,
+    coord: coord
+};
+     
 
 async function inizializza() {
 
